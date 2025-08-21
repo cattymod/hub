@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CattyMod Hub</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+    body {
+        background-color: #121212;
+        color: #ffffff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        min-height: 100vh;
+    }
+
+    header {
+        margin-top: 50px;
+        text-align: center;
+    }
+
+    header h1 {
+        font-size: 3em;
+        color: #ff9800; /* Top heading in orange */
+        margin-bottom: 10px;
+    }
+
+    header h1 .mod {
+        color: #00bfff; /* Light blue for 'Mod' */
+    }
+
+    header p {
+        color: #bbb;
+        font-size: 1.2em;
+    }
+
+    .services {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 25px;
+        width: 90%;
+        max-width: 1000px;
+        margin-top: 60px;
+    }
+
+    .service-card {
+        background: #1f1f1f;
+        border-radius: 12px;
+        padding: 30px 20px;
+        text-align: center;
+        transition: transform 0.2s, background 0.2s;
+        cursor: pointer;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; /* ensures Go floats above bottom */
+        min-height: 250px; /* consistent height for cards */
+    }
+
+    .service-card:hover {
+        transform: translateY(-5px);
+        background: #292929;
+    }
+
+    .service-card h2 {
+        margin-bottom: 10px;
+        font-size: 1.5em;
+        color: #ff9800;
+    }
+
+    .service-card h2 .mod {
+        color: #00bfff; /* light blue for 'Mod' */
+    }
+
+    .service-card p {
+        color: #ccc;
+        font-size: 1em;
+        margin-bottom: 15px;
+        flex-grow: 0; /* pushes Go button down a bit */
+    }
+
+    .service-card a {
+        text-decoration: none;
+        color: #ffffff;
+        background: #ff9800;
+        padding: 8px 18px;
+        border-radius: 6px;
+        transition: background 0.2s;
+        align-self: center; /* center horizontally */
+    }
+
+    .service-card a:hover {
+        background: #e68a00;
+    }
+
+    footer {
+        margin-top: auto;
+        padding: 20px;
+        color: #555;
+        text-align: center;
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <h1>😺 Catty<span class="mod">Mod</span> Hub 🚀</h1>
+    <p>Select a tool from The CattyMod Team below 🌌</p>
+</header>
+
+<div class="services">
+    <div class="service-card">
+        <h2>😸 Catty<span class="mod">Mod</span></h2>
+        <p>The best Scratch mod for power users 🛠️</p>
+        <a href="/editor">Go</a>
+    </div>
+
+    <div class="service-card">
+        <h2>👶 Catty<span class="mod">Mod</span> Jr</h2>
+        <p>A Programming Language for young beginners ✨</p>
+        <a href="/jr">Go</a>
+    </div>
+
+    <div class="service-card">
+        <h2>🐧 CattyLinux</h2>
+        <p>The Perfect Linux Distro</p>
+        <a href="/linux">Go</a>
+    </div>
+
+    <div class="service-card">
+        <h2>🎛️ CattyAdmin</h2>
+        <p>Admin tools for managing your Scratch projects 🗂️</p>
+        <a href="/admin">Go</a>
+    </div>
+
+    <div class="service-card">
+        <h2>📦 Catty<span class="mod">Mod</span> Packager</h2>
+        <p>Package mods easily for sharing 📤</p>
+        <a href="/packager">Go</a>
+    </div>
+
+    <div class="service-card">
+        <h2>👍 ImproveMyScratch</h2>
+        <p>Get Better at Scratch 🚀</p>
+        <a href="/ImproveMyScratch">Go</a>
+    </div>
+
+    <div class="service-card">
+        <h2>🔑 CattyPassword Manager</h2>
+        <p>Keep your passwords safe and secure 🛡️</p>
+        <a href="/pass">Go</a>
+    </div>
+
+    <div class="service-card">
+        <h2>🏭 Linux Maker</h2>
+        <p>Create your own Linux distributions 🖥️</p>
+        <a href="/linux/maker">Go</a>
+    </div>
+</div>
+
+<footer>
+    &copy; 2025 The CattyMod Team 💖
+</footer>
+
+</body>
+</html>
