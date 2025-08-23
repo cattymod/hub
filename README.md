@@ -15,7 +15,7 @@ Check it out live: [CattyMod Hub](https://cattymod.github.io)
 
 | Emoji | Project | Description |
 |-------|---------|-------------|
-| 😸 | CattyMod | The best Scratch mod for power users 🛠️ |
+| 😸 | CattyMod Editor | The best Scratch mod for power users 🛠️ |
 | 👶 | CattyMod Jr | A programming language for young beginners ✨ |
 | 🐧 | CattyLinux | The perfect Linux distro 🐧 |
 | 🎛️ | CattyAdmin | Admin tools for managing Scratch projects 🗂️ |
