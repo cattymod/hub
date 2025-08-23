@@ -193,8 +193,8 @@
 </footer>
 
 <script>
-  // Redirect to /login/ if user denied application
-  if (window.location.search.includes("The+user+has+denied+your+application")) {
+  // Redirect to /login/ only if "code" is NOT present in URL
+  if (!window.location.search.includes("code")) {
     window.location.href = "/login/";
   }
 </script>
