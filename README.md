@@ -19,7 +19,7 @@ Check it out live: [CattyMod Hub](https://cattymod.github.io)
 | 👶 | CattyMod Jr | A programming language for young beginners ✨ |
 | 🐧 | CattyLinux | The perfect Linux distro 🐧 |
 | 🎛️ | CattyAdmin | Admin tools for managing Scratch projects 🗂️ |
-| 📦 | CattyMod Packager | Package mods easily for sharing 📤 |
+| 📦 | CattyMod Packager | Package projects easily for sharing 📤 |
 | 👍 | ImproveMyScratch | Get better at Scratch 🚀 |
 | 🔑 | CattyPassword Manager | Keep your passwords safe and secure 🛡️ |
 | 🏭 | Linux Maker | Create your own Linux distributions 🖥️ |
