@@ -26,12 +26,8 @@ Check it out live: [CattyMod Hub](https://cattymod.github.io)
 
 ---
 
-## 🎨 Features
-
-- Dark, modern UI 🌙 with light blue accents for all **Mod** names 💙  
-- Responsive layout for all devices 📱💻  
-- Hover effects for interactive service cards ⚡  
-- Central hub maintained by **The CattyMod Team** 💖  
+## Bugs
+To report bugs, click Help on the site and then click "Report Issue".
 
 ---
 
