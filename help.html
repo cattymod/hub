@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CattyMod AI + Issue Generator</title>
+<style>
+html, body {height:100%; margin:0; font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; background:#fff; display:flex; justify-content:center; align-items:center;}
+#chat-container {width:480px; max-width:100%; height:80%; display:flex; flex-direction:column; border-radius:10px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.1); position:relative;}
+#chat {flex:1; padding:15px; overflow-y:auto; display:flex; flex-direction:column; gap:10px; background:#fff;}
+.bubble {padding:10px 15px; border-radius:20px; max-width:75%; word-wrap:break-word;}
+.user {background:#4a90e2; color:#fff; align-self:flex-end; border-bottom-right-radius:0;}
+.ai {background:#4caf50; color:#fff; align-self:flex-start; border-bottom-left-radius:0;}
+#input-container {display:flex; border-top:1px solid #ccc; padding:10px; background:#f1f1f1;}
+#user-input {flex:1; padding:10px; border:1px solid #ccc; border-radius:25px; outline:none; font-size:14px;}
+#send-btn, #ticket-btn {padding:10px 15px; margin-left:10px; background:#4a90e2; color:#fff; border:none; border-radius:25px; cursor:pointer; font-weight:bold;}
+#send-btn:hover {background:#357abd;}
+#ticket-btn {background:#e74c3c;}
+#ticket-btn:hover {background:#c0392b;}
+
+/* Overlay */
+#overlay {display:none; position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:10;}
+#overlay-content {background:#fff; padding:20px; border-radius:10px; width:90%; max-width:450px; box-shadow:0 4px 20px rgba(0,0,0,0.2); display:flex; flex-direction:column; gap:10px;}
+#overlay-content h2 {margin:0; font-size:20px; text-align:center;}
+#overlay-content label {font-weight:bold;}
+#overlay-content select, #overlay-content input, #overlay-content textarea {width:100%; padding:8px; border-radius:5px; border:1px solid #ccc; font-size:14px; outline:none;}
+#overlay-content textarea {resize:vertical; min-height:120px; font-family:monospace;}
+#overlay-content .buttons {display:flex; justify-content:space-between; margin-top:10px;}
+#overlay-content button {padding:10px 15px; border:none; border-radius:25px; font-weight:bold; cursor:pointer;}
+#submit-btn {background:#4caf50; color:#fff;}
+#close-btn {background:#ccc;}
+#submit-btn:hover {background:#45a049;}
+#close-btn:hover {background:#aaa;}
+</style>
+</head>
+<body>
+
+<div id="chat-container">
+  <div id="chat"></div>
+  <div id="input-container">
+    <input id="user-input" type="text" placeholder="Ask me anything about CattyMod!"/>
+    <button id="send-btn">Send</button>
+    <button id="ticket-btn">Report Issue</button>
+  </div>
+
+  <!-- Overlay for Issue Generator -->
+  <div id="overlay">
+    <div id="overlay-content">
+      <h2>Report an Issue</h2>
+      <label for="issue-type">Type of Issue:</label>
+      <select id="issue-type">
+        <option value="Feature Request">Feature Request</option>
+        <option value="Bug">Bug</option>
+      </select>
+      <label for="issue-title">Title:</label>
+      <input type="text" id="issue-title" placeholder="Brief title"/>
+      <label for="issue-desc">Description / Details:</label>
+      <textarea id="issue-desc" placeholder="Provide steps, expected behavior, actual behavior, etc."></textarea>
+      <div class="buttons">
+        <button id="close-btn">Close</button>
+        <button id="submit-btn">Submit</button>
+      </div>
+      <small>Markdown template will be applied automatically.</small>
+    </div>
+  </div>
+</div>
+
+<script>
+// Multi-turn memory for AI
+const memory = [];
+
+// CattyMod AI Knowledge
+const knowledge = {
+  greetings: ["hello","hi","hey","yo","yooo"],
+  goodbyes: ["bye","goodbye","see you","later"],
+  services: {
+    "cattymod editor": "CattyMod Editor 🛠️ lets you customize Scratch projects, use extensions, and organize projects efficiently. Pro tip: explore advanced blocks and themes.",
+    "cattymod jr": "CattyMod Jr ✨ is beginner-friendly for young coders.",
+    "cattylinux": "🐧 CattyLinux is optimized for CattyMod users. Use preloaded tools to experiment safely.",
+    "cattyadmin": "CattyAdmin 🗂️ provides admin tools for projects, users, permissions.",
+    "cattymod packager": "CattyMod Packager 📤 lets you package projects easily.",
+    "improvemyscratch": "ImproveMyScratch 🚀 offers tutorials and challenges to improve Scratch skills.",
+    "cattypassword manager": "CattyPassword Manager 🛡️ keeps passwords safe and secure.",
+    "linux maker": "🏭 Linux Maker lets you create custom Linux distributions."
+  },
+  general: {
+    "what is cattymod": "CattyMod is free with 8 CattyServices for programming, Scratch, Linux, admin tools, packaging, and security.",
+    "login": "Go to cattymod.github.io → Get Started → login with Scratch or GitHub.",
+    "how many services": "There are 8 CattyServices in CattyMod.",
+    "features": "CattyMod offers programming, Scratch, Linux, packaging, admin, and security tools. Free for everyone!"
+  },
+  fallback: "I’m not sure about that, but I can help with services, login, features, or troubleshooting."
+};
+
+// AI Functions
+function similarity(input, keyword){ return input.includes(keyword); }
+function cattyModAI(input){
+  input=input.toLowerCase(); memory.push(input);
+  for(let g of knowledge.greetings) if(similarity(input,g)) return "Hi! I’m your CattyMod assistant 😎. Use the 'Report Issue' button for issues!";
+  for(let g of knowledge.goodbyes) if(similarity(input,g)) return "Goodbye! Enjoy CattyMod!";
+  for(let s in knowledge.services) if(similarity(input,s)) return knowledge.services[s];
+  for(let k in knowledge.general) if(similarity(input,k)) return knowledge.general[k];
+  if(similarity(input,"problem")||similarity(input,"error")||similarity(input,"issue")||similarity(input,"trouble")) return "Encountered a problem? Use 'Report Issue' or check FAQ.";
+  if(memory.length>1){
+    const last = memory[memory.length-2];
+    if(last.includes("cattymod editor")&&input.includes("tips")) return "Tips for CattyMod Editor: Use extensions, custom blocks, organize projects 🛠️.";
+    if(last.includes("improvemyscratch")&&input.includes("challenge")) return "Try challenges in ImproveMyScratch 🚀!";
+  }
+  return knowledge.fallback;
+}
+
+// Chat Functions
+function sendMessage(){
+  const inputEl=document.getElementById("user-input"), chat=document.getElementById("chat"), userText=inputEl.value.trim();
+  if(!userText) return;
+  const userBubble=document.createElement("div"); userBubble.className="bubble user"; userBubble.innerHTML=`<b>You:</b> ${userText}`; chat.appendChild(userBubble);
+  const aiBubble=document.createElement("div"); aiBubble.className="bubble ai"; aiBubble.innerHTML=`<b>CattyMod AI:</b> ${cattyModAI(userText)}`; chat.appendChild(aiBubble);
+  chat.scrollTop=chat.scrollHeight; inputEl.value=""; inputEl.focus();
+}
+
+// Preload welcome
+window.onload=()=>{
+  const chat=document.getElementById("chat");
+  const welcomeBubble=document.createElement("div");
+  welcomeBubble.className="bubble ai";
+  welcomeBubble.innerHTML="<b>CattyMod AI:</b> Welcome! 😎 Ask me anything about CattyMod!";
+  chat.appendChild(welcomeBubble);
+};
+
+// Event listeners
+document.getElementById("send-btn").addEventListener("click",sendMessage);
+document.getElementById("user-input").addEventListener("keypress",e=>{if(e.key==='Enter') sendMessage();});
+
+// Ticket overlay logic
+const overlay=document.getElementById("overlay");
+const ticketBtn=document.getElementById("ticket-btn");
+const closeBtn=document.getElementById("close-btn");
+const submitBtn=document.getElementById("submit-btn");
+
+ticketBtn.addEventListener("click",()=>{ overlay.style.display="flex"; });
+closeBtn.addEventListener("click",()=>{ overlay.style.display="none"; });
+
+submitBtn.addEventListener("click",()=>{
+  const type=document.getElementById("issue-type").value;
+  const title=document.getElementById("issue-title").value.trim();
+  const desc=document.getElementById("issue-desc").value.trim();
+  if(!title || !desc){ alert("Please fill out title and description!"); return; }
+  const finalTitle=`[${type}]: ${title}`;
+  const markdownBody=`# [${type}]: ${title}
+
+## Description
+${desc}
+
+## Steps to Reproduce (for Bugs)
+1. Step one
+2. Step two
+3. Step three
+*(If not a bug, leave blank)*
+
+## Expected Behavior
+
+## Actual Behavior (for Bugs)
+*(Leave blank for feature requests)*
+
+## Proposed Solution / Additional Context
+
+## Screenshots / Examples
+
+## Environment
+- Page URL: 
+- User Agent: ${navigator.userAgent}
+`;
+  const url=`https://github.com/cattymod/hub/issues/new?title=${encodeURIComponent(finalTitle)}&body=${encodeURIComponent(markdownBody)}`;
+  window.open(url,"_blank");
+  overlay.style.display="none";
+  document.getElementById("issue-title").value="";
+  document.getElementById("issue-desc").value="";
+});
+</script>
