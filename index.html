@@ -3,233 +3,121 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CattyMod Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <title>Scrooch Project</title>
+  <link rel="icon" href="https://avatars.githubusercontent.com/u/221273265?s=200&v=4">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-    body { display: flex; min-height: 100vh; background-color: #f9fafb; color: #1f2937; overflow: hidden; }
-
-    /* Sidebar */
-    .sidebar {
-      width: 250px;
-      background-color: #ffffff;
-      border-right: 1px solid #e5e7eb;
-      display: flex; flex-direction: column;
-      padding: 20px; overflow-y: auto;
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
     }
-    .sidebar h2 {
-      margin-bottom: 40px; font-weight: 700;
-      font-size: 1.5rem; text-align: left;
+    header {
+      background-color: #1e1e1e;
+      padding: 40px 20px;
+      text-align: center;
     }
-    .sidebar h2 .blue { color: #0ea5e9; }
-    .sidebar a {
-      display: flex; align-items: center; gap: 12px;
-      color: #374151; text-decoration: none; margin-bottom: 20px;
-      font-weight: 500; transition: color 0.2s, background 0.2s;
-      padding: 8px 12px; border-radius: 8px; cursor: pointer;
+    header img {
+      width: 90px;
+      height: 90px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
     }
-    .sidebar a:hover { background-color: #e0f2fe; color: #0ea5e9; }
-    .sidebar a i { width: 20px; text-align: center; }
-    .sidebar a.active { background-color: #bae6fd; color: #0ea5e9; }
-
-    /* Logout pinned bottom */
-    .bottom-buttons {
-      margin-top: auto; display:flex; flex-direction:column; gap:10px;
+    h1 {
+      font-size: 2.5rem;
+      margin: 15px 0 5px;
     }
-    .logout {
-      background: none; border: none;
-      color: #ef4444; font-weight: 600;
-      display: flex; align-items: center; gap: 10px;
-      padding: 8px 12px; cursor: pointer; border-radius: 8px;
+    p {
+      font-size: 1.1rem;
+      color: #ccc;
+      max-width: 600px;
+      margin: 0 auto;
     }
-    .logout i { color: #ef4444; }
-    .logout:hover { background: #fee2e2; }
-
-    .sidebar .github, .sidebar .help {
-      color:#374151; display:flex; align-items:center; gap:10px;
-      padding:8px 12px; border-radius:8px; text-decoration:none;
+    .section {
+      padding: 50px 20px;
+      max-width: 900px;
+      margin: auto;
+      text-align: center;
     }
-    .sidebar .github:hover, .sidebar .help:hover {
-      background:#e0f2fe; color:#0ea5e9;
+    .btn {
+      display: inline-block;
+      padding: 12px 25px;
+      font-size: 1rem;
+      color: #fff;
+      background-color: #4a90e2;
+      border: none;
+      border-radius: 5px;
+      text-decoration: none;
+      margin-top: 25px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
     }
-
-    /* Main content */
-    .main-content { flex-grow: 1; display: flex; flex-direction: column; }
-    .content-frame { flex-grow: 1; border: none; width: 100%; height: 100%; }
+    .btn:hover {
+      background-color: #357ABD;
+      transform: translateY(-2px);
+    }
+    footer {
+      background-color: #1e1e1e;
+      padding: 20px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #777;
+      border-top: 1px solid #333;
+    }
   </style>
 </head>
 <body>
+  <header>
+    <img src="https://avatars.githubusercontent.com/u/221273265?s=200&v=4" alt="Scrooch Logo">
+    <h1>Welcome to the Scrooch Project</h1>
+    <p>Create your own Scratch mods easily with Scrooch 2 and Scrooch 3 — the open framework for Scratch modding.</p>
+    <a href="https://scrooch-project.github.io/docs" class="btn">📄 View Documentation</a>
+  </header>
 
-<!-- Sidebar -->
-<div class="sidebar">
-  <h2><span class="blue">Catty</span>Mod</h2>
-  <a onclick="loadHome(this)" class="active" id="homeBtn"><i class="fas fa-house"></i>Home</a>
-  <a href="https://cattymod.github.io/editor" target="_blank" data-app="Editor"><i class="fas fa-edit"></i>Editor</a>
-  <a onclick="loadApp('https://cattymod.github.io/jr', this)" data-app="CattyMod Jr"><i class="fas fa-clone"></i>CattyMod Jr</a>
-  <a onclick="loadApp('https://cattymod.github.io/linux/', this)" data-app="CattyLinux"><i class="fas fa-cat"></i>CattyLinux</a>
-  <a onclick="loadApp('https://cattymod.github.io/admin/', this)" data-app="CattyAdmin"><i class="fas fa-gamepad"></i>CattyAdmin</a>
-  <a onclick="loadApp('https://cattymod.github.io/packager/', this)" data-app="Packager"><i class="fas fa-box-open"></i>Packager</a>
-  <a href="https://cattymod.github.io/ImproveMyScratch" target="_blank" data-app="ImproveMyScratch"><i class="fas fa-thumbs-up"></i>ImproveMyScratch</a>
-  <a onclick="loadApp('https://cattymod.github.io/pass', this)" data-app="CattyPassword Manager"><i class="fas fa-key"></i>CattyPassword Manager</a>
-  <a onclick="loadApp('https://cattymod.github.io/linux/maker/', this)" data-app="Linux Maker"><i class="fas fa-marker"></i>Linux Maker</a>
+  <section class="section">
+    <h2>🚀 What is Scrooch?</h2>
+    <p>
+      Scrooch is a modding framework built on top of popular Scratch mods.
+      With Scrooch, you can quickly create your own customized Scratch mod
+      without starting from scratch (pun intended 😉).
+    </p>
+  </section>
 
-  <div class="bottom-buttons">
-    <!-- GitHub button -->
-    <a href="https://github.com/cattymod" target="_blank" class="github"><i class="fab fa-github"></i> GitHub</a>
-    <!-- Help button -->
-    <a onclick="loadApp('https://cattymod.github.io/hub/help.html', this)" data-app="Help" class="help"><i class="fas fa-circle-question"></i> Help</a>
-    <!-- Logout button -->
-    <button class="logout" id="logoutBtn">
-      <i class="fas fa-door-open"></i> Log out
-    </button>
-  </div>
-</div>
+  <section class="section">
+    <h2>🛠 Features (Scrooch 3)</h2>
+    <p>
+      - Easy setup using GitHub templates<br>
+      - Customizable UI and branding<br>
+      - Works with extensions and custom blocks<br>
+      - Based on popular Scratch Mods for stability
+    </p>
+  </section>
 
-<div class="main-content">
-  <iframe class="content-frame" id="contentFrame"></iframe>
-</div>
+  <section class="section">
+    <h2>📦 Get Started</h2>
+    <p>Choose your modding base:</p>
+    <a href="https://scrooch-project.github.io/docs/#/setup/v2" class="btn">📁Make a Scrooch 2 Mod</a>
+<a href="https://github.com/scrooch-project/Scrooch3#readme" 
+   class="btn" 
+   style="background-color:#50c878;margin-left:10px;" 
+   target="_blank" 
+   rel="noopener noreferrer">
+   🐱 Make a Scrooch 3 Mod
+</a>
+  </section>
 
-<script>
-// Redirect to /login/ if CattyAuth cookie is missing
-function getCookie(name) {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop().split(';').shift();
-}
-if (!getCookie("CattyAuth")) {
-  window.location.href = '/login/';
-}
+  <section class="section">
+    <h2>💡 Why Choose Scrooch?</h2>
+    <p>
+      Scrooch saves you hours of setup time so that you can focus on personalising
+      and designing your mod. Whether you’re creating a personal mod, a mod for your friend,
+      or the next big Scratch-based platform, Scrooch gives you the tools you need.
+    </p>
+  </section>
 
-// Logout button removes the cookie and redirects
-document.getElementById("logoutBtn").addEventListener("click", () => {
-  document.cookie = "CattyAuth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-  window.location.href = '/login/';
-});
-
-const apps = [
-  {name: "Editor", icon:"fas fa-edit", url:"https://cattymod.github.io/editor", external:true},
-  {name: "CattyMod Jr", icon:"fas fa-clone", url:"https://cattymod.github.io/jr"},
-  {name: "CattyLinux", icon:"fas fa-cat", url:"https://cattymod.github.io/linux/"},
-  {name: "CattyAdmin", icon:"fas fa-gamepad", url:"https://cattymod.github.io/admin/"},
-  {name: "Packager", icon:"fas fa-box-open", url:"https://cattymod.github.io/packager/"},
-  {name: "ImproveMyScratch", icon:"fas fa-thumbs-up", url:"https://cattymod.github.io/improvemyscratch", external:true},
-  {name: "CattyPassword Manager", icon:"fas fa-key", url:"https://cattymod.github.io/pass"},
-  {name: "Linux Maker", icon:"fas fa-marker", url:"https://cattymod.github.io/linux/maker/"},
-  {name: "Help", icon:"fas fa-circle-question", url:"https://cattymod.github.io/hub/help.html"}
-];
-
-function findSidebarLink(appName) {
-  return Array.from(document.querySelectorAll('.sidebar a'))
-    .find(a => a.dataset.app === appName);
-}
-
-function loadHome(element){
-  document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
-  if(element) element.classList.add('active');
-
-  const iframe = document.getElementById('contentFrame');
-  const doc = iframe.contentDocument || iframe.contentWindow.document;
-  doc.open();
-  doc.write(`
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-      <style>
-        body { margin:0; padding:40px; font-family:'Inter',sans-serif; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; height:100vh; background:linear-gradient(135deg,#e0f2fe,#ffffff); overflow:hidden; }
-        h1{font-size:3rem;font-weight:800;margin-bottom:10px;text-align:center;}
-        h1 .blue{color:#0ea5e9;}
-        h2{font-size:1.5rem;font-weight:600;margin-bottom:20px;color:#374151;text-align:center;}
-        .search-bar { width:100%; max-width:400px; margin-bottom:10px; position:relative; }
-        .search-bar input { width:100%; padding:10px 15px; font-size:1rem; border-radius:12px; border:1px solid #d1d5db; outline:none; }
-        .search-results { display:none; position:absolute; top:100%; left:0; right:0; background:#fff; border:1px solid #d1d5db; border-radius:12px; margin-top:5px; box-shadow:0 6px 15px rgba(0,0,0,0.1); max-height:200px; overflow-y:auto; z-index:10; }
-        .search-result { padding:10px; border-radius:8px; cursor:pointer; display:flex; align-items:center; gap:10px; }
-        .search-result:hover { background:#f3f4f6; }
-        .search-result i { color:#0ea5e9; }
-        .recommended { display:flex; flex-wrap:wrap; justify-content:center; gap:30px; width:100%; margin-top:20px; }
-        .app-card { display:flex; flex-direction:column; align-items:center; justify-content:center; width:130px; height:130px; background-color:#ffffff; border-radius:20px; box-shadow:0 8px 20px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor:pointer; margin-bottom:20px; }
-        .app-card:hover { transform:translateY(-8px); box-shadow:0 12px 30px rgba(0,0,0,0.15); }
-        .app-card i { font-size:2.5rem; color:#0ea5e9; margin-bottom:10px; }
-        .app-card span { font-weight:600;text-align:center; font-size:0.9rem; }
-      </style>
-    </head>
-    <body>
-      <h1>Welcome to <span class="blue">Catty</span>Mod!</h1>
-      <h2>Recommended Apps</h2>
-      <div class="search-bar">
-        <input id="searchInput" placeholder="Search apps..." />
-        <div class="search-results" id="searchResults"></div>
-      </div>
-      <div class="recommended" id="recommendedApps"></div>
-    </body>
-    </html>
-  `);
-  doc.close();
-
-  const script = doc.createElement("script");
-  script.textContent = `
-    const apps = ${JSON.stringify(apps)};
-    const container = document.getElementById('recommendedApps');
-    const resultsBox = document.getElementById('searchResults');
-    const input = document.getElementById('searchInput');
-    let currentMatches = [];
-
-    const shuffled = [...apps].sort(() => 0.5 - Math.random());
-    shuffled.slice(0,4).forEach(a=>{
-      const card = document.createElement('div');
-      card.className = 'app-card';
-      card.innerHTML = '<i class="'+a.icon+'"></i><span>'+a.name+'</span>';
-      card.addEventListener('click', ()=>{
-        if(a.external){ window.open(a.url,'_blank'); }
-        else { window.parent.loadApp(a.url, window.parent.findSidebarLink(a.name)); }
-      });
-      container.appendChild(card);
-    });
-
-    function renderResults(query){
-      resultsBox.innerHTML = '';
-      if(!query){ resultsBox.style.display='none'; currentMatches=[]; return; }
-      const matches = apps.filter(a=>a.name.toLowerCase().includes(query));
-      currentMatches = matches;
-      matches.forEach(a=>{
-        const item = document.createElement('div');
-        item.className = 'search-result';
-        item.innerHTML = '<i class="'+a.icon+'"></i><span>'+a.name+'</span>';
-        item.addEventListener('click', ()=>{
-          if(a.external){ window.open(a.url,'_blank'); }
-          else { window.parent.loadApp(a.url, window.parent.findSidebarLink(a.name)); }
-          input.value=''; resultsBox.style.display='none'; currentMatches=[];
-        });
-        resultsBox.appendChild(item);
-      });
-      resultsBox.style.display = matches.length ? 'block' : 'none';
-    }
-
-    input.addEventListener('input', e=>{ renderResults(e.target.value.toLowerCase()); });
-    input.addEventListener('keydown', e=>{
-      if(e.key==='Enter' && currentMatches.length>0){
-        const topApp = currentMatches[0];
-        if(topApp.external){ window.open(topApp.url,'_blank'); }
-        else { window.parent.loadApp(topApp.url, window.parent.findSidebarLink(topApp.name)); }
-        input.value=''; resultsBox.style.display='none'; currentMatches=[];
-      }
-    });
-  `;
-  doc.body.appendChild(script);
-}
-
-function loadApp(url, element){
-  const iframe = document.getElementById('contentFrame');
-  iframe.src = url;
-  document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
-  if(element) element.classList.add('active');
-}
-
-window.addEventListener("DOMContentLoaded", () => {
-  loadHome(document.getElementById('homeBtn'));
-});
-</script>
+  <footer>
+    Scrooch Project — Not affiliated with Scratch, the Scratch Team, or the Scratch Foundation.
+  </footer>
 </body>
 </html>
