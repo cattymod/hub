@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>CattyMod AI + Modern Ticket</title>
-<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+<title>CattyMod AI + Ticket</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://hcaptcha.com/1/api.js" async defer></script>
 <style>
-html, body {height:100%; margin:0; font-family:'Segoe UI',sans-serif; background:#f0f4f8; display:flex; justify-content:center; align-items:center;}
-#main-menu {width:480px; max-width:95%; border-radius:16px; background:#fff; padding:40px 20px; display:flex; flex-direction:column; align-items:center; gap:20px; box-shadow:0 8px 30px rgba(0,0,0,0.15);}
-.big-btn {width:80%; padding:20px; font-size:18px; font-weight:bold; border:none; border-radius:16px; cursor:pointer; background:#5ac8fa; color:#fff; display:flex; align-items:center; justify-content:center; gap:10px; transition:all 0.2s ease;}
+body, html {margin:0; padding:0; font-family:'Inter', sans-serif; background:#f0f4f8; display:flex; justify-content:center; align-items:center; height:100vh;}
+#main-menu {width:480px; max-width:95%; padding:40px 20px; background:#fff; border-radius:16px; box-shadow:0 8px 30px rgba(0,0,0,0.15); display:flex; flex-direction:column; align-items:center; gap:20px;}
+.big-btn {width:80%; padding:20px; font-size:18px; font-weight:bold; border:none; border-radius:16px; cursor:pointer; background:#5ac8fa; color:#fff; display:flex; justify-content:center; align-items:center; gap:10px; transition:all 0.2s;}
 .big-btn:hover {background:#3aa0d6;}
 #ticket-form {display:none; width:100%; justify-content:center; align-items:center;}
 #ticket-card {width:90%; max-width:500px; background:#fff; border-radius:16px; box-shadow:0 8px 30px rgba(0,0,0,0.15); padding:30px; display:flex; flex-direction:column; gap:20px; position:relative; overflow:hidden;}
@@ -79,7 +80,7 @@ html, body {height:100%; margin:0; font-family:'Segoe UI',sans-serif; background
         </div>
 
         <div id="ticket-buttons">
-          <button id="back-ticket">← Back</button>
+          <button id="back-ticket">Close</button>
           <button id="next-ticket" disabled>Next →</button>
           <button id="submit-ticket">Submit & Send</button>
         </div>
@@ -89,7 +90,7 @@ html, body {height:100%; margin:0; font-family:'Segoe UI',sans-serif; background
 
 <div id="chat-container">
     <div id="chat-header">
-        <button id="back-btn">← Back</button>
+        <button id="back-btn">Back</button>
         CattyMod AI Support
     </div>
     <div id="chat"></div>
@@ -100,7 +101,7 @@ html, body {height:100%; margin:0; font-family:'Segoe UI',sans-serif; background
 </div>
 
 <script>
-// Step-based Typeform ticket logic
+// --- Ticket Logic ---
 const questions=document.querySelectorAll(".question");
 const nextBtn=document.getElementById("next-ticket");
 const backBtn=document.getElementById("back-ticket");
@@ -123,6 +124,7 @@ function renderDynamicFields(){
     };
     if(type==="Bug"){createInput("Steps to Reproduce","ticket-steps","Step 1, Step 2, Step 3","textarea"); createInput("Expected Behavior","ticket-expected","What should happen","textarea"); createInput("Actual Behavior","ticket-actual","What actually happens","textarea");}
     else if(type==="Feature Request"){createInput("Proposed Solution / Context","ticket-proposal","Describe your idea","textarea");}
+    else if(type==="Custom"){createInput("Custom Details","ticket-custom","Describe your custom issue","textarea");}
 }
 
 function checkStepFilled(){
@@ -134,7 +136,6 @@ function checkStepFilled(){
     nextBtn.style.opacity = allFilled ? "1" : "0.5";
 }
 
-// Add listeners to all initial inputs/selects
 questions.forEach(q=>{
     const inputs=q.querySelectorAll("input, textarea, select");
     inputs.forEach(input=>{input.addEventListener("input",checkStepFilled); input.addEventListener("change",checkStepFilled);});
@@ -144,45 +145,72 @@ function showStep(step){
     questions.forEach(q=>q.classList.remove("active"));
     questions[step].classList.add("active");
     updateProgress();
-    // SHOW Next until the last step (hCaptcha)
     nextBtn.style.display = step < questions.length - 1 ? "inline-block" : "none";
     submitBtn.style.display = step === questions.length - 1 ? "inline-block" : "none";
-    backBtn.style.display = step > 0 ? "inline-block" : "none";
+    backBtn.textContent = step === 0 ? "Close" : "← Back";
     renderDynamicFields();
     checkStepFilled();
 }
 
 nextBtn.addEventListener("click",()=>{if(currentStep<questions.length-1) currentStep++; showStep(currentStep);});
-backBtn.addEventListener("click",()=>{if(currentStep>0) currentStep--; showStep(currentStep);});
+backBtn.addEventListener("click",()=>{if(currentStep===0){document.getElementById("ticket-form").style.display="none"; document.getElementById("ai-btn").style.display="block"; document.getElementById("ticket-btn").style.display="block";} else {currentStep--; showStep(currentStep);}});
 showStep(currentStep);
 
-// Menu buttons
 document.getElementById("ai-btn").addEventListener("click",()=>{document.getElementById("main-menu").style.display="none"; document.getElementById("chat-container").style.display="flex";});
 document.getElementById("back-btn").addEventListener("click",()=>{document.getElementById("chat-container").style.display="none"; document.getElementById("main-menu").style.display="flex";});
 document.getElementById("ticket-btn").addEventListener("click",()=>{document.getElementById("ticket-form").style.display="flex"; document.getElementById("ai-btn").style.display="none"; document.getElementById("ticket-btn").style.display="none";});
-document.getElementById("back-ticket").addEventListener("click",()=>{document.getElementById("ticket-form").style.display="none"; document.getElementById("ai-btn").style.display="block"; document.getElementById("ticket-btn").style.display="block";});
 
 // Submit ticket
 submitBtn.addEventListener("click",()=>{
   const type=document.getElementById("ticket-type").value;
   const title=document.getElementById("ticket-title").value.trim();
   const desc=document.getElementById("ticket-desc").value.trim();
-  const hcaptchaToken=hcaptcha.getResponse();
-  if(!title || !desc){alert("Title and description required."); return;}
-  if(!hcaptchaToken){alert("Please complete hCaptcha."); return;}
-  let body=`# Description\n${desc}\n\n`;
+  if(!title||!desc){alert("Please fill title and description!"); return;}
+  let body=`## Description\n${desc}\n\n`;
   if(type==="Bug"){const steps=document.getElementById("ticket-steps").value.trim(); const expected=document.getElementById("ticket-expected").value.trim(); const actual=document.getElementById("ticket-actual").value.trim(); if(steps) body+=`## Steps to Reproduce\n${steps}\n\n`; if(expected) body+=`## Expected Behavior\n${expected}\n\n`; if(actual) body+=`## Actual Behavior\n${actual}\n\n`;}
   else if(type==="Feature Request"){const proposal=document.getElementById("ticket-proposal").value.trim(); if(proposal) body+=`## Proposed Solution / Context\n${proposal}\n\n`;}
+  else if(type==="Custom"){const custom=document.getElementById("ticket-custom").value.trim(); if(custom) body+=`## Custom Details\n${custom}\n\n`;}
   body+=`## Environment\n- Page URL: \n- User Agent: ${navigator.userAgent}`;
   const url=`https://github.com/cattymod/hub/issues/new?title=${encodeURIComponent(`[${type}]: ${title}`)}&body=${encodeURIComponent(body)}`;
-  window.open(url,"_blank"); hcaptcha.reset();
+  window.open(url,"_blank");
 });
 
-// Basic AI chat
-const memory=[]; const knowledge={greetings:["hello","hi","hey"],goodbyes:["bye","goodbye"],fallback:"I’m not sure 🤔"}; 
-function cattyModAI(input){input=input.toLowerCase(); memory.push(input); for(let g of knowledge.greetings) if(input.includes(g)) return "Hi there! 😎"; for(let g of knowledge.goodbyes) if(input.includes(g)) return "Bye! 👋"; return knowledge.fallback;}
-function sendMessage(){const inputEl=document.getElementById("user-input"), chat=document.getElementById("chat"), userText=inputEl.value.trim(); if(!userText) return; const userBubble=document.createElement("div"); userBubble.className="bubble user"; userBubble.innerHTML=`<b>You:</b> ${userText}`; chat.appendChild(userBubble); const typingBubble=document.createElement("div"); typingBubble.className="typing"; typingBubble.innerHTML="CattyMod AI is typing <span></span><span></span><span></span>"; chat.appendChild(typingBubble); chat.scrollTop=chat.scrollHeight; inputEl.value=""; inputEl.focus(); setTimeout(()=>{chat.removeChild(typingBubble); const aiBubble=document.createElement("div"); aiBubble.className="bubble ai"; aiBubble.innerHTML=`<b>CattyMod AI:</b> ${cattyModAI(userText)}`; chat.appendChild(aiBubble); chat.scrollTop=chat.scrollHeight;},1200+Math.random()*800);}
-document.getElementById("send-btn").addEventListener("click",sendMessage); document.getElementById("user-input").addEventListener("keypress",e=>{if(e.key==="Enter") sendMessage();});
+// --- AI Chat ---
+let awaitingCategory=false;
+const memoryAI=[];
+const services={ "cattymod editor":["editor","edito","cattymod editor"], "cattymod jr":["jr","cattymod jr"], "cattylinux":["linux","cattylinux"], "cattyadmin":["admin","cattyadmin"], "cattymod packager":["packager","package"], "improvemyscratch":["improve scratch","improvemyscratch"], "cattypassword manager":["password","cattypassword manager"], "linux maker":["linux maker","maker"] };
+const serviceDescriptions={ "cattymod editor":"CattyMod Editor 🛠️ lets you customize Scratch projects.", "cattymod jr":"CattyMod Jr ✨ is beginner-friendly.", "cattylinux":"🐧 CattyLinux is built for everyone, including businesses.", "cattyadmin":"CattyAdmin 🗂️ admin tools.", "cattymod packager":"CattyMod Packager 📤 package projects.", "improvemyscratch":"ImproveMyScratch 🚀 tutorials & challenges.", "cattypassword manager":"CattyPassword Manager 🛡️ secure passwords.", "linux maker":"🏭 Linux Maker creates custom Linux."};
+const feedbackKeywords=["awesome","cool","great","fun"];
+
+function cattyModAI(input){
+    input=input.toLowerCase(); memoryAI.push(input);
+    if(["hello","hi","hey","yo"].some(g=>input.includes(g))) return "Hi there! 😎 How’s it going?";
+    if(["bye","goodbye","see you","later"].some(g=>input.includes(g))) return "Bye! 👋 Have fun with CattyMod!";
+    if(feedbackKeywords.some(f=>input.includes(f))) return "Thanks! 😊 You’re awesome!";
+    if(awaitingCategory){
+        awaitingCategory=false;
+        if(input.includes("scratch")) return "For Scratch projects, I recommend: CattyMod Editor 🛠️, CattyMod Jr ✨, ImproveMyScratch 🚀!";
+        else if(input.includes("linux")) return "For Linux work: CattyLinux 🐧, Linux Maker 🏭!";
+        else if(input.includes("admin") || input.includes("business")) return "For admin/business: CattyAdmin 🗂️, CattyPassword Manager 🛡️!";
+        else return "I’m not sure 🤔, but CattyMod services are versatile for everyone!";
+    }
+    if(input.includes("what services") || input.includes("what's for me") || input.includes("services for me") || input.includes("services for businesses")){awaitingCategory=true; return "🤖 Sure! What type of work do you do? (Scratch, Linux, Admin, Business)";}
+    for(let key in services){ if(services[key].some(s=>input.includes(s))) return serviceDescriptions[key]; }
+    return "I’m not sure 🤔. I can help with services, login, or features!";
+}
+
+function sendMessage(){
+    const inputEl=document.getElementById("user-input"), chat=document.getElementById("chat"), userText=inputEl.value.trim(); 
+    if(!userText) return;
+    const userBubble=document.createElement("div"); userBubble.className="bubble user"; userBubble.innerHTML=`<b>You:</b> ${userText}`; chat.appendChild(userBubble);
+    const typingBubble=document.createElement("div"); typingBubble.className="typing"; typingBubble.innerHTML="CattyMod AI is typing <span></span><span></span><span></span>"; chat.appendChild(typingBubble); chat.scrollTop=chat.scrollHeight;
+    inputEl.value=""; inputEl.focus();
+    setTimeout(()=>{chat.removeChild(typingBubble); const aiBubble=document.createElement("div"); aiBubble.className="bubble ai"; aiBubble.innerHTML=`<b>CattyMod AI:</b> ${cattyModAI(userText)}`; chat.appendChild(aiBubble); chat.scrollTop=chat.scrollHeight;},1200+Math.random()*800);
+}
+
+document.getElementById("send-btn").addEventListener("click",sendMessage); 
+document.getElementById("user-input").addEventListener("keypress",e=>{if(e.key==="Enter") sendMessage();});
+
 </script>
 </body>
 </html>
