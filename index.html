@@ -47,11 +47,11 @@
     .logout i { color: #ef4444; }
     .logout:hover { background: #fee2e2; }
 
-    .sidebar .github, .sidebar .help {
+    .sidebar .github, .sidebar {
       color:#374151; display:flex; align-items:center; gap:10px;
       padding:8px 12px; border-radius:8px; text-decoration:none;
     }
-    .sidebar .github:hover, .sidebar .help:hover {
+    .sidebar .github:hover, .sidebar {
       background:#e0f2fe; color:#0ea5e9;
     }
 
@@ -81,7 +81,6 @@
 
   <div class="bottom-buttons">
     <a href="https://github.com/cattymod" target="_blank" class="github"><i class="fab fa-github"></i> GitHub</a>
-    <a onclick="loadApp('https://cattymod.github.io/hub/help.html', this)" data-app="Help" class="help"><i class="fas fa-circle-question"></i> Help</a>
     <button class="logout" id="logoutBtn">
       <i class="fas fa-door-open"></i> Log out
     </button>
@@ -116,7 +115,6 @@ const apps = [
   {name: "CattyPassword Manager", icon:"fas fa-key", url:"https://cattymod.github.io/pass"},
   {name: "Linux Maker", icon:"fas fa-marker", url:"https://cattymod.github.io/linux/maker/"},
   {name: "Scrooch", icon:"fas fa-rocket", url:"https://scrooch-project.github.io", sponsored:true},
-  {name: "Help", icon:"fas fa-circle-question", url:"https://cattymod.github.io/hub/help.html"}
 ];
 
 function findSidebarLink(appName) {
