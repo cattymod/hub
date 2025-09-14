@@ -33,9 +33,10 @@
     .sidebar a i { width: 20px; text-align: center; }
     .sidebar a.active { background-color: #bae6fd; color: #0ea5e9; }
 
-    /* Logout pinned bottom */
+    /* Bottom buttons */
     .bottom-buttons {
-      margin-top: auto; display:flex; flex-direction:column; gap:10px;
+      margin-top: auto; display:flex; flex-direction:column; gap:8px;
+      border-top: 1px solid #e5e7eb; padding-top: 15px;
     }
     .logout {
       background: none; border: none;
@@ -74,7 +75,7 @@
   <a onclick="loadApp('https://cattymod.github.io/pass', this)" data-app="CattyPassword Manager"><i class="fas fa-key"></i>CattyPassword Manager</a>
   <a onclick="loadApp('https://cattymod.github.io/linux/maker/', this)" data-app="Linux Maker"><i class="fas fa-marker"></i>Linux Maker</a>
   <!-- Scrooch Sponsored -->
-  <a href="https://scrooch-project.github.io" target="_blank" data-app="Scrooch">
+  <a onclick="loadApp('https://scrooch-project.github.io', this)" data-app="Scrooch">
     <i class="fas fa-rocket"></i>Scrooch <span style="background:#50c878;color:white;font-size:0.7rem;padding:2px 6px;margin-left:auto;border-radius:4px;">SPONSORED</span>
   </a>
 
@@ -114,7 +115,7 @@ const apps = [
   {name: "ImproveMyScratch", icon:"fas fa-thumbs-up", url:"https://cattymod.github.io/improvemyscratch", external:true},
   {name: "CattyPassword Manager", icon:"fas fa-key", url:"https://cattymod.github.io/pass"},
   {name: "Linux Maker", icon:"fas fa-marker", url:"https://cattymod.github.io/linux/maker/"},
-  {name: "Scrooch", icon:"fas fa-rocket", url:"https://scrooch-project.github.io", external:true, sponsored:true},
+  {name: "Scrooch", icon:"fas fa-rocket", url:"https://scrooch-project.github.io", sponsored:true},
   {name: "Help", icon:"fas fa-circle-question", url:"https://cattymod.github.io/hub/help.html"}
 ];
 
