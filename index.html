@@ -124,11 +124,15 @@ function loadHome(element){
   document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
   if(element) element.classList.add('active');
 
-  // Reset iframe src before injecting new content
   const iframe = document.getElementById('contentFrame');
-  iframe.src = 'about:blank';
-  iframe.onload = () => {
-    const doc = iframe.contentDocument || iframe.contentWindow.document;
+
+  // Fully reset iframe to avoid conflicts with previous scripts
+  const newIframe = iframe.cloneNode(true);
+  iframe.parentNode.replaceChild(newIframe, iframe);
+
+  newIframe.src = 'about:blank';
+  newIframe.onload = () => {
+    const doc = newIframe.contentDocument || newIframe.contentWindow.document;
     doc.open();
     doc.write(`
       <!DOCTYPE html>
@@ -226,10 +230,14 @@ function loadHome(element){
 }
 
 function loadApp(url, element){
-  const iframe = document.getElementById('contentFrame');
-  iframe.src = url;
   document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
   if(element) element.classList.add('active');
+
+  // Fully reset iframe to prevent Home scripts from interfering
+  const iframe = document.getElementById('contentFrame');
+  const newIframe = iframe.cloneNode(true);
+  iframe.parentNode.replaceChild(newIframe, iframe);
+  newIframe.src = url;
 }
 
 window.addEventListener("DOMContentLoaded", () => {
