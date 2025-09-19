@@ -47,11 +47,11 @@
     .logout i { color: #ef4444; }
     .logout:hover { background: #fee2e2; }
 
-    .sidebar .github, .sidebar .help {
+    .sidebar .github {
       color:#374151; display:flex; align-items:center; gap:10px;
       padding:8px 12px; border-radius:8px; text-decoration:none;
     }
-    .sidebar .github:hover, .sidebar .help:hover {
+    .sidebar .github:hover {
       background:#e0f2fe; color:#0ea5e9;
     }
 
@@ -74,7 +74,6 @@
   <a href="https://cattymod.github.io/ImproveMyScratch" target="_blank" data-app="ImproveMyScratch"><i class="fas fa-thumbs-up"></i>ImproveMyScratch</a>
   <a onclick="loadApp('https://cattymod.github.io/pass', this)" data-app="CattyPassword Manager"><i class="fas fa-key"></i>CattyPassword Manager</a>
   <a onclick="loadApp('https://cattymod.github.io/linux/maker/', this)" data-app="Linux Maker"><i class="fas fa-marker"></i>Linux Maker</a>
-  <!-- Scrooch Sponsored -->
   <a onclick="loadApp('https://scrooch-project.github.io', this)" data-app="Scrooch">
     <i class="fas fa-rocket"></i>Scrooch <span style="background:#50c878;color:white;font-size:0.7rem;padding:2px 6px;margin-left:auto;border-radius:4px;">SPONSORED</span>
   </a>
@@ -114,8 +113,7 @@ const apps = [
   {name: "ImproveMyScratch", icon:"fas fa-thumbs-up", url:"https://cattymod.github.io/improvemyscratch", external:true},
   {name: "CattyPassword Manager", icon:"fas fa-key", url:"https://cattymod.github.io/pass"},
   {name: "Linux Maker", icon:"fas fa-marker", url:"https://cattymod.github.io/linux/maker/"},
-  {name: "Scrooch", icon:"fas fa-rocket", url:"https://scrooch-project.github.io", sponsored:true},
-  {name: "Help", icon:"fas fa-circle-question", url:"https://cattymod.github.io/hub/help.html"}
+  {name: "Scrooch", icon:"fas fa-rocket", url:"https://scrooch-project.github.io", sponsored:true}
 ];
 
 function findSidebarLink(appName) {
@@ -126,101 +124,105 @@ function loadHome(element){
   document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
   if(element) element.classList.add('active');
 
+  // Reset iframe src before injecting new content
   const iframe = document.getElementById('contentFrame');
-  const doc = iframe.contentDocument || iframe.contentWindow.document;
-  doc.open();
-  doc.write(`
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-      <style>
-        body { margin:0; padding:40px; font-family:'Inter',sans-serif; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; height:100vh; background:linear-gradient(135deg,#e0f2fe,#ffffff); overflow:hidden; }
-        h1{font-size:3rem;font-weight:800;margin-bottom:10px;text-align:center;}
-        h1 .blue{color:#0ea5e9;}
-        h2{font-size:1.5rem;font-weight:600;margin-bottom:20px;color:#374151;text-align:center;}
-        .search-bar { width:100%; max-width:400px; margin-bottom:10px; position:relative; }
-        .search-bar input { width:100%; padding:10px 15px; font-size:1rem; border-radius:12px; border:1px solid #d1d5db; outline:none; }
-        .search-results { display:none; position:absolute; top:100%; left:0; right:0; background:#fff; border:1px solid #d1d5db; border-radius:12px; margin-top:5px; box-shadow:0 6px 15px rgba(0,0,0,0.1); max-height:200px; overflow-y:auto; z-index:10; }
-        .search-result { padding:10px; border-radius:8px; cursor:pointer; display:flex; align-items:center; gap:10px; }
-        .search-result:hover { background:#f3f4f6; }
-        .search-result i { color:#0ea5e9; }
-        .recommended { display:flex; flex-wrap:wrap; justify-content:center; gap:30px; width:100%; margin-top:20px; }
-        .app-card { display:flex; flex-direction:column; align-items:center; justify-content:center; width:130px; height:130px; background-color:#ffffff; border-radius:20px; box-shadow:0 8px 20px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor:pointer; margin-bottom:20px; position:relative; }
-        .app-card:hover { transform:translateY(-8px); box-shadow:0 12px 30px rgba(0,0,0,0.15); }
-        .app-card i { font-size:2.5rem; color:#0ea5e9; margin-bottom:10px; }
-        .app-card span { font-weight:600;text-align:center; font-size:0.9rem; }
-        .sponsored-badge { position:absolute; top:8px; right:8px; background:#50c878; color:white; font-size:0.65rem; font-weight:600; padding:2px 6px; border-radius:4px; }
-      </style>
-    </head>
-    <body>
-      <h1>Welcome to <span class="blue">Catty</span>Mod!</h1>
-      <h2>Recommended Apps</h2>
-      <div class="search-bar">
-        <input id="searchInput" placeholder="Search apps..." />
-        <div class="search-results" id="searchResults"></div>
-      </div>
-      <div class="recommended" id="recommendedApps"></div>
-    </body>
-    </html>
-  `);
-  doc.close();
+  iframe.src = 'about:blank';
+  iframe.onload = () => {
+    const doc = iframe.contentDocument || iframe.contentWindow.document;
+    doc.open();
+    doc.write(`
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+        <style>
+          body { margin:0; padding:40px; font-family:'Inter',sans-serif; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; height:100vh; background:linear-gradient(135deg,#e0f2fe,#ffffff); overflow:hidden; }
+          h1{font-size:3rem;font-weight:800;margin-bottom:10px;text-align:center;}
+          h1 .blue{color:#0ea5e9;}
+          h2{font-size:1.5rem;font-weight:600;margin-bottom:20px;color:#374151;text-align:center;}
+          .search-bar { width:100%; max-width:400px; margin-bottom:10px; position:relative; }
+          .search-bar input { width:100%; padding:10px 15px; font-size:1rem; border-radius:12px; border:1px solid #d1d5db; outline:none; }
+          .search-results { display:none; position:absolute; top:100%; left:0; right:0; background:#fff; border:1px solid #d1d5db; border-radius:12px; margin-top:5px; box-shadow:0 6px 15px rgba(0,0,0,0.1); max-height:200px; overflow-y:auto; z-index:10; }
+          .search-result { padding:10px; border-radius:8px; cursor:pointer; display:flex; align-items:center; gap:10px; }
+          .search-result:hover { background:#f3f4f6; }
+          .search-result i { color:#0ea5e9; }
+          .recommended { display:flex; flex-wrap:wrap; justify-content:center; gap:30px; width:100%; margin-top:20px; }
+          .app-card { display:flex; flex-direction:column; align-items:center; justify-content:center; width:130px; height:130px; background-color:#ffffff; border-radius:20px; box-shadow:0 8px 20px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; cursor:pointer; margin-bottom:20px; position:relative; }
+          .app-card:hover { transform:translateY(-8px); box-shadow:0 12px 30px rgba(0,0,0,0.15); }
+          .app-card i { font-size:2.5rem; color:#0ea5e9; margin-bottom:10px; }
+          .app-card span { font-weight:600;text-align:center; font-size:0.9rem; }
+          .sponsored-badge { position:absolute; top:8px; right:8px; background:#50c878; color:white; font-size:0.65rem; font-weight:600; padding:2px 6px; border-radius:4px; }
+        </style>
+      </head>
+      <body>
+        <h1>Welcome to <span class="blue">Catty</span>Mod!</h1>
+        <h2>Recommended Apps</h2>
+        <div class="search-bar">
+          <input id="searchInput" placeholder="Search apps..." />
+          <div class="search-results" id="searchResults"></div>
+        </div>
+        <div class="recommended" id="recommendedApps"></div>
+      </body>
+      </html>
+    `);
+    doc.close();
 
-  const script = doc.createElement("script");
-  script.textContent = `
-    const apps = ${JSON.stringify(apps)};
-    const container = document.getElementById('recommendedApps');
-    const resultsBox = document.getElementById('searchResults');
-    const input = document.getElementById('searchInput');
-    let currentMatches = [];
+    const script = doc.createElement("script");
+    script.textContent = `
+      const apps = ${JSON.stringify(apps)};
+      const container = document.getElementById('recommendedApps');
+      const resultsBox = document.getElementById('searchResults');
+      const input = document.getElementById('searchInput');
+      let currentMatches = [];
 
-    const shuffled = [...apps].sort(() => 0.5 - Math.random());
-    shuffled.slice(0,4).forEach(a=>{
-      const card = document.createElement('div');
-      card.className = 'app-card';
-      card.innerHTML = \`
-        \${a.sponsored ? '<div class="sponsored-badge">SPONSORED</div>' : ''}
-        <i class="\${a.icon}"></i>
-        <span>\${a.name}</span>
-      \`;
-      card.addEventListener('click', ()=>{
-        if(a.external){ window.open(a.url,'_blank'); }
-        else { window.parent.loadApp(a.url, window.parent.findSidebarLink(a.name)); }
-      });
-      container.appendChild(card);
-    });
-
-    function renderResults(query){
-      resultsBox.innerHTML = '';
-      if(!query){ resultsBox.style.display='none'; currentMatches=[]; return; }
-      const matches = apps.filter(a=>a.name.toLowerCase().includes(query));
-      currentMatches = matches;
-      matches.forEach(a=>{
-        const item = document.createElement('div');
-        item.className = 'search-result';
-        item.innerHTML = '<i class="'+a.icon+'"></i><span>'+a.name+'</span>';
-        item.addEventListener('click', ()=>{
+      const shuffled = [...apps].sort(() => 0.5 - Math.random());
+      shuffled.slice(0,4).forEach(a=>{
+        const card = document.createElement('div');
+        card.className = 'app-card';
+        card.innerHTML = \`
+          \${a.sponsored ? '<div class="sponsored-badge">SPONSORED</div>' : ''}
+          <i class="\${a.icon}"></i>
+          <span>\${a.name}</span>
+        \`;
+        card.addEventListener('click', ()=>{
           if(a.external){ window.open(a.url,'_blank'); }
           else { window.parent.loadApp(a.url, window.parent.findSidebarLink(a.name)); }
-          input.value=''; resultsBox.style.display='none'; currentMatches=[];
         });
-        resultsBox.appendChild(item);
+        container.appendChild(card);
       });
-      resultsBox.style.display = matches.length ? 'block' : 'none';
-    }
 
-    input.addEventListener('input', e=>{ renderResults(e.target.value.toLowerCase()); });
-    input.addEventListener('keydown', e=>{
-      if(e.key==='Enter' && currentMatches.length>0){
-        const topApp = currentMatches[0];
-        if(topApp.external){ window.open(topApp.url,'_blank'); }
-        else { window.parent.loadApp(topApp.url, window.parent.findSidebarLink(topApp.name)); }
-        input.value=''; resultsBox.style.display='none'; currentMatches=[];
+      function renderResults(query){
+        resultsBox.innerHTML = '';
+        if(!query){ resultsBox.style.display='none'; currentMatches=[]; return; }
+        const matches = apps.filter(a=>a.name.toLowerCase().includes(query));
+        currentMatches = matches;
+        matches.forEach(a=>{
+          const item = document.createElement('div');
+          item.className = 'search-result';
+          item.innerHTML = '<i class="'+a.icon+'"></i><span>'+a.name+'</span>';
+          item.addEventListener('click', ()=>{
+            if(a.external){ window.open(a.url,'_blank'); }
+            else { window.parent.loadApp(a.url, window.parent.findSidebarLink(a.name)); }
+            input.value=''; resultsBox.style.display='none'; currentMatches=[];
+          });
+          resultsBox.appendChild(item);
+        });
+        resultsBox.style.display = matches.length ? 'block' : 'none';
       }
-    });
-  `;
-  doc.body.appendChild(script);
+
+      input.addEventListener('input', e=>{ renderResults(e.target.value.toLowerCase()); });
+      input.addEventListener('keydown', e=>{
+        if(e.key==='Enter' && currentMatches.length>0){
+          const topApp = currentMatches[0];
+          if(topApp.external){ window.open(topApp.url,'_blank'); }
+          else { window.parent.loadApp(topApp.url, window.parent.findSidebarLink(topApp.name)); }
+          input.value=''; resultsBox.style.display='none'; currentMatches=[];
+        }
+      });
+    `;
+    doc.body.appendChild(script);
+  };
 }
 
 function loadApp(url, element){
