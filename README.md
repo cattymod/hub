@@ -26,11 +26,6 @@ Check it out live: [CattyMod Hub](https://cattymod.github.io)
 
 ---
 
-## Bugs
-To report bugs, click Help on the site and then click "Report Issue".
-
----
-
 ## 📜 License
 
 All content is open for non-commercial use unless otherwise stated. Contact **The CattyMod Team** 💌 for questions about redistribution or commercial projects.  
